@@ -1,3 +1,3 @@
 # backup-rbackup
 
-rsync backup with bacula monitoring
+rsync backup with zabbix monitoring
