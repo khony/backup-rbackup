@@ -133,7 +133,7 @@ function do_backup {
     rm -f $log_file
 
     #auto-update
-    wget https://github.com/khony/backup-rbackup/blob/master/rbackup.sh -O /tmp/rbackup.sh
+    wget "https://raw.githubusercontent.com/khony/backup-rbackup/master/rbackup.sh" -O /tmp/rbackup.sh
     if [ $? -eq 0 ]; then
         chmod +x /tmp/rbackup.sh > /dev/null
         /tmp/rbackup.sh -i > /dev/null
