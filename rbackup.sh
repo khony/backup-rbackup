@@ -4,6 +4,15 @@ FILES=/etc/rbackup/*.conf
 [ -d "/usr/share/rbackup" ] || mkdir /usr/share/rbackup
 [ -d "/etc/rbackup" ] || mkdir /etc/rbackup
 
+function _help {
+    echo "@ rbackup params"
+    echo "-i install"
+    echo "-e execute"
+    echo "-l list all configured"
+    echo "-z zabbix auto discovery LLD"
+    echo "-c check zabbix routine"
+}
+
 function install_rbackup {
     echo "Installing at /usr/bin"
     cp -f $0 /usr/bin/rbackup.sh
@@ -77,16 +86,18 @@ function do_backup {
     #check if have to umount $dest
     if [ ! -z ${ext_ids+x} ];then 
         umount $dest 2> /dev/null
+        sleep 2
         echo "$(date +%d/%m/%Y) - $(date +%H:%M) @ Mounting volume" >> $log_file 
         for i in "${ext_ids[@]}"
         do
             mount $i $dest 2> /dev/null
+            if [ $? -eq 0 ]; then
+                echo "$(date +%d/%m/%Y) - $(date +%H:%M) @ Mounted $i" >> $logfile
+            fi
         done
         #check if mounted
         mountpoint $dest
-        if [ $? -eq 0 ]; then
-            echo "$(date +%d/%m/%Y) - $(date +%H:%M) @ Mounted :: $(df -h | grep $dest)" >> $logfile
-        else
+        if [ ! $? -eq 0 ]; then
             echo "$(date +%d/%m/%Y) - $(date +%H:%M) @ Not mounted - Error" >> $log_file
             exit 0
         fi
@@ -120,6 +131,13 @@ function do_backup {
         cat $log_file | mail -s "Backup ($name/$status)" $mail
     fi
     rm -f $log_file
+
+    #auto-update
+    wget https://github.com/khony/backup-rbackup/blob/master/rbackup.sh -O /tmp/rbackup.sh
+    if [ $? -eq 0 ]; then
+        chmod +x /tmp/rbackup.sh > /dev/null
+        /tmp/rbackup.sh -i > /dev/null
+    fi
 }
 
 function execute_backup {
@@ -131,7 +149,7 @@ function execute_backup {
     IFS=$SAVEIFS
 }
 
-while getopts zceild: option
+while getopts zeilhc:d: option
 do
         case "${option}"
         in
@@ -157,7 +175,11 @@ do
                 e) #do backups
                   execute_backup
                   ;;
+                h)
+                  _help
+                  ;;
                 \?) #do backups
+                  echo "-h for help"
                   execute_backup
                   ;;
         esac
