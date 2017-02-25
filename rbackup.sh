@@ -16,8 +16,10 @@ function _help {
 function install_rbackup {
     echo "Installing at /usr/bin"
     cp -f $0 /usr/bin/rbackup.sh
-    ln -s /usr/bin/rbackup.sh /usr/bin/rbackup
-    cp -f conf/rsync_ext_media.conf /etc/rbackup/rsync_ext_media.conf.example
+    ln -s /usr/bin/rbackup.sh /usr/bin/rbackup 2> /dev/null
+    if [ -f "conf/rsync_ext_media.conf "];then
+        cp -f conf/rsync_ext_media.conf /etc/rbackup/rsync_ext_media.conf.example 2> /dev/null
+    fi
     echo "Done!"
 }
 
