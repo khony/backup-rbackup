@@ -79,7 +79,7 @@ function do_backup {
     #check if already running
     testrsync=`ps aux|grep rsync|grep -v grep`
     if [ "$testrsync" == "" ];then
-        echo "$(date +%d/%m/%Y) - $(date +%H:%M) @ Init backup $routine" >> $log_file
+        echo "$(date +%d/%m/%Y) - $(date +%H:%M) @ Init backup $routine" > $log_file
     else
         echo "Backup already running @ $(date +%d/%m/%Y) - $(date +%H:%M)" | mail -s "Backup ($name/Already running)" $mail
         exit 0
@@ -132,7 +132,6 @@ function do_backup {
     if [ -e "$mail" ];then 
         cat $log_file | mail -s "Backup ($name/$status)" $mail
     fi
-    rm -f $log_file
 
     #auto-update
     wget "https://raw.githubusercontent.com/khony/backup-rbackup/master/rbackup.sh" -O /tmp/rbackup.sh
