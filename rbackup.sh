@@ -1,12 +1,13 @@
 #!/bin/bash
-FILES=./conf/*.conf
+FILES=/etc/rbackup/*.conf
+
+[ -d "/usr/share/rbackup" ] || mkdir /usr/share/rbackup
+[ -d "/etc/rbackup" ] || mkdir /etc/rbackup
 
 function install_rbackup {
     echo "Installing at /usr/bin"
     cp -f $0 /usr/bin/rbackup.sh
     ln -s /usr/bin/rbackup.sh /usr/bin/rbackup
-    [ -d "/usr/share/rbackup" ] || mkdir /usr/share/rbackup
-    [ -d "/etc/rbackup" ] || mkdir /etc/rbackup
     cp -f conf/rsync_ext_media.conf /etc/rbackup/rsync_ext_media.conf.example
     echo "Done!"
 }
@@ -124,14 +125,13 @@ function do_backup {
 function execute_backup {
     SAVEIFS=$IFS
     IFS=$(echo -en "\n\b")
-    for f in $FILES
-    do
-    do_backup "$f"
+    for f in $FILES;do
+        do_backup "$f"
     done
     IFS=$SAVEIFS
 }
 
-while getopts zcild option
+while getopts zceild: option
 do
         case "${option}"
         in
@@ -150,7 +150,11 @@ do
                   list_backups
                   exit 0
                   ;;
-                d) #do backups
+                d) #dir of backups
+                  FILES="${OPTARGS}"
+                  execute_backup
+                  ;;
+                e) #do backups
                   execute_backup
                   ;;
                 \?) #do backups
