@@ -120,8 +120,6 @@ function do_backup {
         umount $dest 2> /dev/null
     fi
 
-    echo "$(date +%d/%m/%Y) - $(date +%H:%M) @ Backup ended" >> $log_file
-
     if [ "$rsyncstatus" == "0" ];then
         #backup ok
         status="OK"
@@ -133,9 +131,12 @@ function do_backup {
     echo "$(date +%s),$rsyncstatus" > /usr/share/rbackup/$routine
 
     #send e-mail
-    if [ ! -z ${mail+x} ];then 
+    if [ ! -z ${mail+x} ];then
+        echo "$(date +%d/%m/%Y) - $(date +%H:%M) @ Sending e-mail" >> $log_file
         cat $log_file | mail -s "Backup ($name/$status)" $mail
     fi
+
+    echo "$(date +%d/%m/%Y) - $(date +%H:%M) @ Backup ended" >> $log_file
 
     #auto-update
     wget "https://raw.githubusercontent.com/khony/backup-rbackup/master/rbackup.sh" -O /tmp/rbackup.sh
