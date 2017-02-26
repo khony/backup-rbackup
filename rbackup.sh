@@ -81,7 +81,9 @@ function do_backup {
     if [ "$testrsync" == "" ];then
         echo "$(date +%d/%m/%Y) - $(date +%H:%M) @ Init backup $routine" > $log_file
     else
-        echo "Backup already running @ $(date +%d/%m/%Y) - $(date +%H:%M)" | mail -s "Backup ($name/Already running)" $mail
+        if [ ! -z ${mail+x} ];then 
+            echo "Backup already running @ $(date +%d/%m/%Y) - $(date +%H:%M)" | mail -s "Backup ($name/Already running)" $mail
+        fi
         exit 0
     fi
 
@@ -113,6 +115,8 @@ function do_backup {
 
     #umount after backup
     if [ ! -z ${ext_ids+x} ];then 
+        sleep 2
+        echo "$(date +%d/%m/%Y) - $(date +%H:%M) @ Umounting volume" >> $log_file 
         umount $dest 2> /dev/null
     fi
 
