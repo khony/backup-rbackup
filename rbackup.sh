@@ -129,7 +129,7 @@ function do_backup {
     echo "$(date +%s),$rsyncstatus" > /usr/share/rbackup/$routine
 
     #send e-mail
-    if [ -e "$mail" ];then 
+    if [ ! -z ${mail+x} ];then 
         cat $log_file | mail -s "Backup ($name/$status)" $mail
     fi
 
