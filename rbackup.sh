@@ -128,15 +128,16 @@ function do_backup {
         status="ERROR"
     fi
 
+    #saving status do zabbix
     echo "$(date +%s),$rsyncstatus" > /usr/share/rbackup/$routine
+    #done backup
+    echo "$(date +%d/%m/%Y) - $(date +%H:%M) @ Backup ended" >> $log_file
 
     #send e-mail
     if [ ! -z ${mail+x} ];then
         echo "$(date +%d/%m/%Y) - $(date +%H:%M) @ Sending e-mail" >> $log_file
         cat $log_file | mail -s "Backup ($name/$status)" $mail
     fi
-
-    echo "$(date +%d/%m/%Y) - $(date +%H:%M) @ Backup ended" >> $log_file
 
     #auto-update
     wget "https://raw.githubusercontent.com/khony/backup-rbackup/master/rbackup.sh" -O /tmp/rbackup.sh
