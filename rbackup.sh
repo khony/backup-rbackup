@@ -115,7 +115,7 @@ function do_backup {
 
     #umount after backup
     if [ ! -z ${ext_ids+x} ];then 
-        sleep 2
+        sleep 7
         echo "$(date +%d/%m/%Y) - $(date +%H:%M) @ Umounting volume" >> $log_file 
         umount $dest 2> /dev/null
     fi
