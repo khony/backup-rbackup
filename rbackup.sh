@@ -162,7 +162,7 @@ function execute_backup {
     IFS=$SAVEIFS
 }
 
-while getopts zeilhrc:d: option
+while getopts zeilhs:c:d: option
 do
         case "${option}"
         in
@@ -170,7 +170,7 @@ do
                   bacula_auto_discovery
                   exit 0
                   ;;
-                c) #bacula check routine
+                s) #bacula check routine
                   rbackup_check_status ${OPTARG}
                   exit 0
                   ;;
