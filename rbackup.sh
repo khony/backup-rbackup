@@ -47,14 +47,13 @@ function bacula_auto_discovery {
 }
 
 function rbackup_check_status {
-    if [ "$2" == "lastrun" ];then
-        lr=`cat /usr/share/rbackup/$* | cut -d, -f1`
-        now=`date +%s`
-        echo `expr $now - $lr`
-    else
-        cat /usr/share/rbackup/$* | cut -d, -f1
-    fi
-    
+    cat /usr/share/rbackup/$* | cut -d, -f2  
+}
+
+function rbackup_check_lastrun {
+    lr=`cat /usr/share/rbackup/$* | cut -d, -f1`
+    now=`date +%s`
+    echo `expr $now - $lr`
 }
 
 function list_backups {
@@ -163,7 +162,7 @@ function execute_backup {
     IFS=$SAVEIFS
 }
 
-while getopts zeilhc:d: option
+while getopts zeilhrc:d: option
 do
         case "${option}"
         in
@@ -173,6 +172,10 @@ do
                   ;;
                 c) #bacula check routine
                   rbackup_check_status ${OPTARG}
+                  exit 0
+                  ;;
+                c) #bacula check last run
+                  rbackup_check_lastrun ${OPTARG}
                   exit 0
                   ;;
                 i) #install rbackup
