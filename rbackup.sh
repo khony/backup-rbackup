@@ -46,8 +46,15 @@ function bacula_auto_discovery {
     IFS=$SAVEIFS
 }
 
-function bacula_check {
-    cat /usr/share/rbackup/$*
+function rbackup_check_status {
+    if [ "$2" == "lastrun" ];then
+        lr=`cat /usr/share/rbackup/$* | cut -d, -f1`
+        now=`date +%s`
+        echo `expr $now - $lr`
+    else
+        cat /usr/share/rbackup/$* | cut -d, -f1
+    fi
+    
 }
 
 function list_backups {
@@ -165,7 +172,7 @@ do
                   exit 0
                   ;;
                 c) #bacula check routine
-                  bacula_check ${OPTARG}
+                  rbackup_check_status ${OPTARG}
                   exit 0
                   ;;
                 i) #install rbackup
