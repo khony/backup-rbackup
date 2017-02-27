@@ -96,7 +96,7 @@ function do_backup {
         do
             mount $i $dest 2> /dev/null
             if [ $? -eq 0 ]; then
-                echo "$(date +%d/%m/%Y) - $(date +%H:%M) @ Mounted $i" >> $logfile
+                echo "$(date +%d/%m/%Y) - $(date +%H:%M) @ Mounted $i" >> $log_file
             fi
         done
         #check if mounted
