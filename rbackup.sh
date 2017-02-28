@@ -109,6 +109,7 @@ function do_backup {
         mountpoint $dest
         if [ ! $? -eq 0 ]; then
             echo "$(date +%d/%m/%Y) - $(date +%H:%M) @ Not mounted - Error" >> $log_file
+            echo "$(date +%s),999" > /usr/share/rbackup/$routine
             exit 0
         fi
     fi
