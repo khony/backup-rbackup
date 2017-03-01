@@ -23,7 +23,7 @@ function install_rbackup {
     echo "Done!"
 }
 
-function bacula_auto_discovery {
+function zabbix_auto_discovery {
     file="/tmp/file_zabbix_rsync"
     echo -e "{" > $file
     echo -e "\t\"data\":[" >> $file
@@ -167,15 +167,15 @@ while getopts zeilhs:c:d: option
 do
         case "${option}"
         in
-                z) # bacula auto discovery
-                  bacula_auto_discovery
+                z) #zabbix auto discovery
+                  zabbix_auto_discovery
                   exit 0
                   ;;
-                s) #bacula check routine
+                s) #zabbix check routine
                   rbackup_check_status ${OPTARG}
                   exit 0
                   ;;
-                c) #bacula check last run
+                c) #zabbix check last run
                   rbackup_check_lastrun ${OPTARG}
                   exit 0
                   ;;
