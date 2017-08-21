@@ -23,7 +23,7 @@ function install_rbackup {
     echo "Done!"
 }
 
-function bacula_auto_discovery {
+function zabbix_auto_discovery {
     file="/tmp/file_zabbix_rsync"
     echo -e "{" > $file
     echo -e "\t\"data\":[" >> $file
